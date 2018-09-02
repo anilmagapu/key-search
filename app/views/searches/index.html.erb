@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<head>
+</head>
+<body>
+<div id="wrapper">
+    <div class="row">
+        <div class="dialpad compact col-md-3 col-md-offset-4">
+            <div class="btn-group">
+                <a href="/contacts/new" class="btn btn-primary">Add Contact</a>
+            </div>
+            <div class="popup-number" >
+                
+            </div>
+            <div class="number" contenteditable="true"></div>
+            
+            <div class="dials"> 
+                <ol>
+                    <li class="digits"><p><strong>1</strong></p></li>
+                    <li class="digits"><p><strong>2</strong><sup>abc</sup></p></li>
+                    <li class="digits"><p><strong>3</strong><sup>def</sup></p></li>
+                    <li class="digits"><p><strong>4</strong><sup>ghi</sup></p></li>
+                    <li class="digits"><p><strong>5</strong><sup>jkl</sup></p></li>
+                    <li class="digits"><p><strong>6</strong><sup>mno</sup></p></li>
+                    <li class="digits"><p><strong>7</strong><sup>pqrs</sup></p></li>
+                    <li class="digits"><p><strong>8</strong><sup>tuv</sup></p></li>
+                    <li class="digits"><p><strong>9</strong><sup>wxyz</sup></p></li>
+                    <li class="digits"><p><strong>*</strong></p></li>
+                    <li class="digits"><p><strong>0</strong><sup>+</sup></p></li>
+                    <li class="digits"><p><strong>#</strong></p></li>
+                    <li class="digits full-btn"><p><strong><i class="fa fa-times"></i></strong><sup>Delete</sup></p></li>
+                    <li class="digits pad-action full-btn disable"><p><strong><i class="fa fa-phone"></i></strong> <sup>Call</sup></p></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $=jQuery;
+    $( document ).ready(function() {
+       $('ol li.digits').click((e)=>{
+            populate_suggestions();
+       });
+       populate_suggestions();
+    });
+    function populate_suggestions(flag){
+      search_key = $('.number').text().trim()+''; 
+            if(search_key.length >=3 || search_key.length <=2){
+                search_key=search_key.length <=2? '':search_key; 
+                $.ajax({
+                type: "GET",
+                url: "/search",
+                data: {phone_number:search_key},
+                contentType: "application/json",
+                 success: function(data){
+                    if(data){
+                        let html="";
+                        data.forEach((v,k)=>{
+                           html+='<li onclick="$(\'.number\').html('+v[1]+'),hidePopup(),toggleOpacity()"> <span class="name">'+v[0]+'</span> <span class="phone_number">'+v[1]+'</span></li>';
+                        });
+                        $('.popup-number').html('<ul>'+html+'</ul>');
+                    }
+                 },
+                // failure: function(errMsg) {
+                //   }
+          });
+       
+            }else{
+                //$('.popup-number').addClass('hide');
+                
+            }
+    }
+    function toggleOpacity(){
+        
+       search_key = $('.number').text().trim();  
+       if(search_key.length==10)
+        $('.pad-action').removeClass('disable');
+       else
+        $('.pad-action').addClass('disable');
+    }
+</script>
+</body>
+</html>
+<ul>
+                
+
+            </ul>
